@@ -45,17 +45,17 @@
     transition: 0.3s;
     margin-bottom: -8px;
 }
-.movie-poster:hover {
+/* .movie-poster:hover {
     cursor: grab;
     opacity: 0.3;
-}
+} */
 .poster-container {
     background-color: black;
 }
 .card {
     padding: 2em;
 }
-
+.details {max-width: 400px;}
 .read-the-docs {
     color: #888;
 }
