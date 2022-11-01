@@ -35,19 +35,22 @@
     /*border: 1px solid white;*/
     padding: 20px;
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(20rem, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(18rem, 1fr));
     gap: 1rem;
     align-items: baseline;
 }
 .movie-poster {
     width: 100%;
     background-size: cover;
-    transition: 0.5s;
-    
+    transition: 0.3s;
+    margin-bottom: -8px;
 }
-.movie-poster:hover{
-  cursor: grab;
-  opacity: 0.2;
+.movie-poster:hover {
+    cursor: grab;
+    opacity: 0.3;
+}
+.poster-container {
+    background-color: black;
 }
 .card {
     padding: 2em;
@@ -56,15 +59,7 @@
 .read-the-docs {
     color: #888;
 }
-img {
-    width: 100%;
-    /*
-
-  height: 100%;
-  aspect-ratio: 4 / 3;
-  object-fit: fill;
-  object-position: 50% 50%;
-  box-shadow: rgba(255, 255, 255, 0.3) 0px 0px 10px 0px;
-  z-index: 20;
-  */
+.page-link {
+    cursor: grab;
+    display: inline;
 }
