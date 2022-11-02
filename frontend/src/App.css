@@ -31,35 +31,113 @@
         animation: logo-spin infinite 20s linear;
     }
 }
-.movie-result {
-    /*border: 1px solid white;*/
-    padding: 20px;
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(18rem, 1fr));
-    gap: 1rem;
-    align-items: baseline;
-}
 .movie-poster {
     width: 100%;
     background-size: cover;
     transition: 0.3s;
     margin-bottom: -8px;
 }
+/* .detail-poster {
+    max-width: 500px;
+} */
+.poster-container {
+    text-align: center;
+}
 /* .movie-poster:hover {
     cursor: grab;
     opacity: 0.3;
 } */
-.poster-container {
-    background-color: black;
-}
+
 .card {
     padding: 2em;
 }
-.details {max-width: 400px;}
+.details {
+    max-width: 600px;
+}
+.person-details-img {
+    max-width: 400px;
+}
 .read-the-docs {
     color: #888;
 }
 .page-link {
     cursor: grab;
     display: inline;
+}
+.overview {
+    padding: 12px 0px 12px 0px;
+}
+.person {
+    padding: 0px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
+    gap: 1rem;
+    align-items: baseline;
+}
+.person-img {
+    width: 100%;
+}
+
+#cover {
+    position: fixed;
+    right: 0px;
+    top: 0px;
+    height: 100vh;
+    width: 100vh;
+    z-index: -1;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+#cover2 {
+    position: fixed;
+    left: 0px;
+    top: 0px;
+    width: 100%;
+    height: 200%;
+    z-index: -1;
+    background-color: rgb(0, 0, 0, 0.9);
+}
+.current-page {
+    color: rgb(12, 234, 0);
+    font-weight: bold;
+    margin: 0px 3px 0px 3px;
+}
+.page-number {
+    font-weight: bold;
+    cursor: grab;
+    margin: 0px 3px 0px 3px;
+}
+.infos-container .infos-box {
+    display: grid;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    z-index: 10;
+}
+.person-img-container {
+    text-align: center;
+}
+.movies-grid {
+    margin-top: 12px;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-gap: 2rem 2rem;
+    /* padding: 2.5rem 6rem 1rem; */
+    position: relative;
+}
+@media screen and (max-width: 700px) {
+    .movies-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+@media screen and (max-width: 600px) {
+    .movies-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+@media screen and (max-width: 400px) {
+    .movies-grid {
+        grid-template-columns: repeat(1, 1fr);
+    }
 }

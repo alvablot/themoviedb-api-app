@@ -1,6 +1,7 @@
 import { createBrowserRouter, RouterProvider, Outlet } from "react-router-dom";
 import TopMovies from "./pages/TopMovies";
 import Details from "./pages/Details";
+import Person from "./pages/Person";
 import "./App.css";
 
 function Root() {
@@ -29,11 +30,16 @@ const router = createBrowserRouter([
             {
                 path: "details/:movieId",
                 element: <Details />,
-            } /*
+            },
+            {
+                path: "person/:personId",
+                element: <Person />,
+            },
+            /*
       {
         path: "calender",
         element: <Calender />,
-      },*/,
+      },*/
             ,
         ],
     },
@@ -41,7 +47,7 @@ const router = createBrowserRouter([
 
 function App() {
     return (
-        <div className="App">
+        <div>
             <RouterProvider router={router} />
         </div>
     );
