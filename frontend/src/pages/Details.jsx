@@ -7,8 +7,10 @@ import axios from "axios";
 import Navbar from "../components/Navbar";
 import image from "../assets/person.png";
 import image2 from "../assets/noposter.svg";
+import star1 from "../assets/star1.png";
+import star2 from "../assets/star2.png";
+import star3 from "../assets/star3.png";
 const posterImg = new Image();
-const bgImg = new Image();
 posterImg.src = image2;
 const url = "https://api.themoviedb.org/";
 const api_key = "25ab3dddf0d6a4fa832949a56d7e7191";
@@ -35,19 +37,62 @@ function Details() {
     const [genres, setGenres] = useState([]);
     const [director, setDirector] = useState("");
     const [writer, setWriter] = useState("");
+    const [backdrop, setBackdrop] = useState("");
     let { movieId } = useParams();
     let newMovieId = movieId.split(":");
     newMovieId = newMovieId[1];
     const findMovie = `${url}3/movie/${newMovieId}?api_key=${api_key}`;
     const findCast = `${url}3/movie/${newMovieId}/credits?api_key=${api_key}`;
+    const movieImages = `${url}3/movie/${newMovieId}/images?api_key=${api_key}`;
 
     async function getMovie() {
         try {
             const response = await axios.get(findMovie);
             const data = response.data;
             setDetails(data);
-            console.log(data);
+            // console.log(data);
             setGenres([...data.genres]);
+        } catch (error) {
+            console.error(error);
+        }
+    }
+    async function getImages() {
+        try {
+            const response = await axios.get(movieImages);
+            const data = response.data;
+            // console.log(data)
+            const backdropImages = data.posters.filter(
+                (poster) => poster.iso_639_1 === "en" && poster.height > 2000
+            );
+
+            setBackdrop(`https://image.tmdb.org/t/p/w500/${backdropImages[0].file_path}`);
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    async function getMyDb() {
+        try {
+            const response = await axios.get(
+                "http://127.0.0.1:5001/fir-test-291d7/us-central1/app"
+            );
+            const data = response.data;
+            console.log(data);
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
+    async function postMyDb() {
+        try {
+            const response = await axios.post(
+                "http://127.0.0.1:5001/fir-test-291d7/us-central1/app",
+                {
+                    name: "Petter",
+                }
+            );
+            const data = response.data;
+            console.log(data);
         } catch (error) {
             console.error(error);
         }
@@ -70,10 +115,12 @@ function Details() {
         document.body.scrollIntoView({ behavior: "smooth" });
         getMovie();
         getCast();
+        getImages();
+        // getMyDb();
+        // postMyDb()
     }, []);
 
     posterImg.src = `https://image.tmdb.org/t/p/w500/${details.poster_path}`;
-    bgImg.src = `https://image.tmdb.org/t/p/w500/${details.backdrop_path}`;
 
     return (
         <div className="details">
@@ -97,6 +144,13 @@ function Details() {
                 />
             </div>
             <h2>{details.tagline}</h2>
+            <div className="vote">
+                <img className="star" src={star1} width="20" />
+                <img className="star" src={star1} width="20" />
+                <img className="star" src={star1} width="20" />
+                <img className="star" src={star2} width="20" />
+                <img className="star" src={star3} width="20" />
+            </div>
             <div>
                 <b>{details.release_date}</b>
             </div>
@@ -143,7 +197,7 @@ function Details() {
                     );
                 })}
             </div>
-            <div id="cover" style={{ backgroundImage: `url(${bgImg.src})` }}></div>
+            <div id="cover" style={{ backgroundImage: `url(${backdrop})` }}></div>
             <div id="cover2"></div>
         </div>
     );

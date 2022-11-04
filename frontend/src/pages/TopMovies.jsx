@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Outlet, NavLink, Link, useLoaderData, Form, redirect } from "react-router-dom";
 import axios from "axios";
+import numberFormatter from "number-formatter";
 import { useMoviesContext } from "../contexts/MoviesContext";
 import Navbar from "../components/Navbar";
 import image from "../assets/person.png";
@@ -58,7 +59,8 @@ function TopMovies() {
             <Navbar />
             <div className="card">
                 <h1>Petter's TMDB</h1>
-                Search<br />
+                Search
+                <br />
                 <input
                     onChange={(e) => {
                         setSearchInput(e.target.value);
@@ -98,7 +100,7 @@ function TopMovies() {
                     setNextPage(nextPage - 1);
                 }}
             >
-                {"<< "}
+                <b className="page-number">{"<< "}</b>
             </div>
             Page <span className="current-page">{currentPage}</span>
             <span
@@ -125,14 +127,14 @@ function TopMovies() {
             >
                 {currentPage + 3}
             </span>{" "}
-            of {totalPages}
+            of {numberFormatter("#,##0.####", totalPages)}
             <div
                 className="page-link"
                 onClick={() => {
                     setNextPage(nextPage + 1);
                 }}
             >
-                {" >>"}
+                <b className="page-number">{" >>"}</b>
             </div>
             <div id="cover"></div>
             <div id="cover2"></div>
