@@ -14,6 +14,9 @@ export function MoviesProvider(props) {
     const [crew, setCrew] = useState([]);
     const [searchResults, setSearchResults] = useState([]);
 
+    
+    const [token, setToken] = useState("");
+
     const providerValue = {
         nextPage,
         setNextPage,
@@ -33,6 +36,8 @@ export function MoviesProvider(props) {
         setCast,
         crew,
         setCrew,
+        token,
+        setToken,
     };
     return <MoviesContext.Provider value={providerValue}>{props.children}</MoviesContext.Provider>;
 }

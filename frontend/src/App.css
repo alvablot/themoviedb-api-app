@@ -89,6 +89,7 @@
 #cover {
     position: fixed;
     top: 0px;
+    left: 0px;
     height: 100%;
     width: 100%;
     z-index: -1;
@@ -103,10 +104,14 @@
     width: 100%;
     height: 200%;
     z-index: -1;
-    background-color: rgb(0, 0, 0, 0.8);
+    background-color: rgb(0, 0, 0, 0.9);
+}
+.login-input {
+    position: absolute;
+    right: 60px;
 }
 .current-page {
-    color: rgb(12, 234, 0);
+    color: #646cff;
     font-weight: bold;
     margin: 0px 3px 0px 3px;
 }
@@ -132,6 +137,22 @@
     grid-gap: 2rem 2rem;
     /* padding: 2.5rem 6rem 1rem; */
     position: relative;
+}
+.vote-status {
+    position: relative;
+    margin-left: 10px;
+    top: -2px;
+    color: #646cff;
+}
+.new-user {
+    margin-left: 80px;
+    cursor: grab;
+}
+.visible {
+    display: block;
+}
+.hidden {
+    display: none;
 }
 @media screen and (max-width: 700px) {
     .movies-grid {

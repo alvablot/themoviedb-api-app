@@ -12,7 +12,7 @@ function Navbar() {
                         >
                             Top Movies
                         </NavLink> */}
-            <a href="/topmovies">Top Movies</a><br />
+            <a href="/topmovies">Start</a><br />
   
         </div>
     );

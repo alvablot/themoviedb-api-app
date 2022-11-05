@@ -27,6 +27,10 @@ function Person() {
         setCrew,
     } = useMoviesContext();
 
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const [isLoggedIn, setIsLoggedIn] = useState("");
+
     let { personId } = useParams();
     let newPersonId = personId.split(":");
 
@@ -47,6 +51,12 @@ function Person() {
     useEffect(() => {
         document.body.scrollIntoView({ behavior: "smooth" });
         getPerson();
+
+        const token = localStorage.getItem("token");
+        const email = localStorage.getItem("email");
+        // console.log(token);
+        if (email) setIsLoggedIn(`Logged in as ${email}`);
+        else setIsLoggedIn("");
     }, []);
 
     return (
@@ -60,6 +70,7 @@ function Person() {
             >
                 {"<<"}
             </a>
+            <span className="login-input">{isLoggedIn}</span>
             <h1>{details.name}</h1>
             <div className="person-img-container">
                 <img

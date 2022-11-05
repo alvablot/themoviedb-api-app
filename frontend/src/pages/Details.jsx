@@ -7,11 +7,10 @@ import axios from "axios";
 import Navbar from "../components/Navbar";
 import image from "../assets/person.png";
 import image2 from "../assets/noposter.svg";
-import star1 from "../assets/star1.png";
-import star2 from "../assets/star2.png";
-import star3 from "../assets/star3.png";
-const posterImg = new Image();
-posterImg.src = image2;
+import starFull from "../assets/star1.png";
+import starHalf from "../assets/star2.png";
+import starEmpty from "../assets/star3.png";
+
 const url = "https://api.themoviedb.org/";
 const api_key = "25ab3dddf0d6a4fa832949a56d7e7191";
 
@@ -34,16 +33,32 @@ function Details() {
         setCrew,
     } = useMoviesContext();
 
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const [isLoggedIn, setIsLoggedIn] = useState("");
+
     const [genres, setGenres] = useState([]);
     const [director, setDirector] = useState("");
     const [writer, setWriter] = useState("");
     const [backdrop, setBackdrop] = useState("");
+    const [poster, setPoster] = useState("");
+
+    const [votes, setVotes] = useState([]);
+    const [star1, setStar1] = useState("");
+    const [star2, setStar2] = useState("");
+    const [star3, setStar3] = useState("");
+    const [star4, setStar4] = useState("");
+    const [star5, setStar5] = useState("");
+
+    const [voteStatus, setVoteStatus] = useState("");
+
     let { movieId } = useParams();
     let newMovieId = movieId.split(":");
     newMovieId = newMovieId[1];
     const findMovie = `${url}3/movie/${newMovieId}?api_key=${api_key}`;
     const findCast = `${url}3/movie/${newMovieId}/credits?api_key=${api_key}`;
     const movieImages = `${url}3/movie/${newMovieId}/images?api_key=${api_key}`;
+    let summonVotes = 0;
 
     async function getMovie() {
         try {
@@ -52,6 +67,7 @@ function Details() {
             setDetails(data);
             // console.log(data);
             setGenres([...data.genres]);
+            setPoster(`https://image.tmdb.org/t/p/w500/${data.poster_path}`);
         } catch (error) {
             console.error(error);
         }
@@ -61,40 +77,10 @@ function Details() {
             const response = await axios.get(movieImages);
             const data = response.data;
             // console.log(data)
-            const backdropImages = data.posters.filter(
-                (poster) => poster.iso_639_1 === "en" && poster.height > 2000
-            );
-
+            const backdropImages = await data.posters.filter((poster) => poster.iso_639_1 === "en");
             setBackdrop(`https://image.tmdb.org/t/p/w500/${backdropImages[0].file_path}`);
         } catch (error) {
             console.log(error);
-        }
-    }
-
-    async function getMyDb() {
-        try {
-            const response = await axios.get(
-                "http://127.0.0.1:5001/fir-test-291d7/us-central1/app"
-            );
-            const data = response.data;
-            console.log(data);
-        } catch (error) {
-            console.error(error);
-        }
-    }
-
-    async function postMyDb() {
-        try {
-            const response = await axios.post(
-                "http://127.0.0.1:5001/fir-test-291d7/us-central1/app",
-                {
-                    name: "Petter",
-                }
-            );
-            const data = response.data;
-            console.log(data);
-        } catch (error) {
-            console.error(error);
         }
     }
 
@@ -110,21 +96,138 @@ function Details() {
             // console.log(data.crew)
         } catch (error) {}
     }
+    async function getVotes() {
+        try {
+            const response = await axios.get("http://localhost:4000/votes/");
+            const data = response.data;
+            const filteredData = data.votes.filter((vote) => vote.id === details.id);
+            setVotes([...filteredData]);
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
+    async function postVotes(id, vote) {
+        const token = localStorage.getItem("token");
+        const email = localStorage.getItem("email");
+        if (!email || !token) {
+            setVoteStatus("You have to login to vote");
+            setTimeout(() => {
+                setVoteStatus("");
+            }, 2000);
+            return;
+        }
+
+        try {
+            const response = await axios.post("http://localhost:4000/votes/", {
+                id: id,
+                vote: vote,
+            });
+            const data = response.data;
+            const filteredData = data.filter((vote) => vote.id === details.id);
+            setVotes([...filteredData]);
+            getVotes();
+        } catch (error) {
+            console.error(error);
+        }
+    }
 
     useEffect(() => {
         document.body.scrollIntoView({ behavior: "smooth" });
         getMovie();
-        getCast();
-        getImages();
-        // getMyDb();
-        // postMyDb()
+        getVotes();
+
+        const token = localStorage.getItem("token");
+        const email = localStorage.getItem("email");
+        // console.log(token);
+        if (email) setIsLoggedIn(`Logged in as ${email}`);
+        else setIsLoggedIn("");
     }, []);
 
-    posterImg.src = `https://image.tmdb.org/t/p/w500/${details.poster_path}`;
+    useEffect(() => {
+        getCast();
+        getImages();
+    }, [details]);
+
+    useEffect(() => {
+        votes.map((vote) => {
+            summonVotes += parseInt(vote.vote);
+        });
+        const roundVotes = summonVotes / votes.length || 0;
+        // console.log(roundVotes);
+        if (roundVotes > 4.5) {
+            setStar1(starFull);
+            setStar2(starFull);
+            setStar3(starFull);
+            setStar4(starFull);
+            setStar5(starFull);
+        } else if (roundVotes > 4) {
+            setStar1(starFull);
+            setStar2(starFull);
+            setStar3(starFull);
+            setStar4(starFull);
+            setStar5(starHalf);
+        } else if (roundVotes > 3.5) {
+            setStar1(starFull);
+            setStar2(starFull);
+            setStar3(starFull);
+            setStar4(starFull);
+            setStar5(starEmpty);
+        } else if (roundVotes > 3) {
+            setStar1(starFull);
+            setStar2(starFull);
+            setStar3(starFull);
+            setStar4(starHalf);
+            setStar5(starEmpty);
+        } else if (roundVotes > 2.5) {
+            setStar1(starFull);
+            setStar2(starFull);
+            setStar3(starFull);
+            setStar4(starEmpty);
+            setStar5(starEmpty);
+        } else if (roundVotes > 2) {
+            setStar1(starFull);
+            setStar2(starFull);
+            setStar3(starHalf);
+            setStar4(starEmpty);
+            setStar5(starEmpty);
+        } else if (roundVotes > 1.5) {
+            setStar1(starFull);
+            setStar2(starFull);
+            setStar3(starEmpty);
+            setStar4(starEmpty);
+            setStar5(starEmpty);
+        } else if (roundVotes > 1) {
+            setStar1(starFull);
+            setStar2(starHalf);
+            setStar3(starEmpty);
+            setStar4(starEmpty);
+            setStar5(starEmpty);
+        } else if (roundVotes > 0.5) {
+            setStar1(starFull);
+            setStar2(starEmpty);
+            setStar3(starEmpty);
+            setStar4(starEmpty);
+            setStar5(starEmpty);
+        } else if (roundVotes > 0) {
+            setStar1(starHalf);
+            setStar2(starEmpty);
+            setStar3(starEmpty);
+            setStar4(starEmpty);
+            setStar5(starEmpty);
+        } else {
+            setStar1(starEmpty);
+            setStar2(starEmpty);
+            setStar3(starEmpty);
+            setStar4(starEmpty);
+            setStar5(starEmpty);
+        }
+    }, [votes]);
 
     return (
         <div className="details">
             <Navbar />
+            <span className="login-input">{isLoggedIn}</span>
             <a
                 href="#"
                 onClick={() => {
@@ -136,7 +239,7 @@ function Details() {
             <h1>{details.title}</h1>
             <div className="poster-container">
                 <img
-                    src={posterImg.src}
+                    src={poster}
                     className="detail-poster"
                     onError={(e) => {
                         e.target.src = image2;
@@ -145,11 +248,47 @@ function Details() {
             </div>
             <h2>{details.tagline}</h2>
             <div className="vote">
-                <img className="star" src={star1} width="20" />
-                <img className="star" src={star1} width="20" />
-                <img className="star" src={star1} width="20" />
-                <img className="star" src={star2} width="20" />
-                <img className="star" src={star3} width="20" />
+                <img
+                    onClick={() => {
+                        postVotes(details.id, 1);
+                    }}
+                    className="star"
+                    src={star1}
+                    width="20"
+                />
+                <img
+                    onClick={() => {
+                        postVotes(details.id, 2);
+                    }}
+                    className="star"
+                    src={star2}
+                    width="20"
+                />
+                <img
+                    onClick={() => {
+                        postVotes(details.id, 3);
+                    }}
+                    className="star"
+                    src={star3}
+                    width="20"
+                />
+                <img
+                    onClick={() => {
+                        postVotes(details.id, 4);
+                    }}
+                    className="star"
+                    src={star4}
+                    width="20"
+                />
+                <img
+                    onClick={() => {
+                        postVotes(details.id, 5);
+                    }}
+                    className="star"
+                    src={star5}
+                    width="20"
+                />
+                <span className="vote-status">{voteStatus}</span>
             </div>
             <div>
                 <b>{details.release_date}</b>
@@ -180,7 +319,7 @@ function Details() {
             </b>
             <h1>Cast</h1>
             <div className="person">
-                {cast.map((person) => {
+                {cast.map((person, i) => {
                     return (
                         <div className="person" key={person.id}>
                             <Link to={`/person/:${person.id}`}>

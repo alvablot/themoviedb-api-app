@@ -1,36 +1,45 @@
+require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
 const fs = require("fs");
-const names = require("./names.json");
+const votes = require("./votes.json");
+const jwt = require("jsonwebtoken");
+const auth = require("./middlewares/auth");
 
 const app = express();
 
 app.use(express.json());
 app.use(cors());
 
-app.get("/", (req, res) => {
-    res.status(200).send({ data: "Get worldy hellos!" });
+const usersRouter = require("./routers/users.router");
+
+app.get("/votes", (req, res) => {
+    res.status(200).send({ votes });
 });
 
-app.post("/", (req, res) => {
-    if (!req.body.name) {
-        return res.status(400).json({ error: "Name missing" });
+app.post("/votes", (req, res) => {
+    if (!req.body.vote) {
+        return res.status(400).json({ error: "Vote missing" });
+    }
+    if (!req.body.id) {
+        return res.status(400).json({ error: "ID missing" });
     }
 
-    names.push({
-        name: req.body.name,
+    votes.push({
+        id: req.body.id,
+        vote: req.body.vote,
     });
-    console.log(names);
-    const stringedJSON = JSON.stringify(names, null, 2);
+    console.log(votes);
+    const stringedJSON = JSON.stringify(votes, null, 2);
 
-    fs.writeFile("./names.json", stringedJSON, (err) => {
+    fs.writeFile("./votes.json", stringedJSON, (err) => {
         if (err) throw err;
-        console.log("Wrote to names.json");
+        console.log("Wrote to votes.json");
     });
 
-    res.send(names);
+    res.send(votes);
 });
-
+app.use(usersRouter);
 app.listen(4000, () => {
-    console.log("Servern kör på port 4000");
+    console.log("⸸ SATAN'S SERVER RUNS ON PORT 4000 ⸸");
 });
