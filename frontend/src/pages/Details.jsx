@@ -42,6 +42,7 @@ function Details() {
     const [writer, setWriter] = useState("");
     const [backdrop, setBackdrop] = useState("");
     const [poster, setPoster] = useState("");
+    const [similarMovies, setSimilarMovies] = useState([]);
 
     const [votes, setVotes] = useState([]);
     const [star1, setStar1] = useState("");
@@ -58,7 +59,8 @@ function Details() {
     const findMovie = `${url}3/movie/${newMovieId}?api_key=${api_key}`;
     const findCast = `${url}3/movie/${newMovieId}/credits?api_key=${api_key}`;
     const movieImages = `${url}3/movie/${newMovieId}/images?api_key=${api_key}`;
-    let summonVotes = 0;
+    const similar = `${url}3/movie/${newMovieId}/similar?api_key=${api_key}`;
+    let summonVotes = `${url}3/movie/${newMovieId}/images?api_key=${api_key}`;
 
     async function getMovie() {
         try {
@@ -68,6 +70,16 @@ function Details() {
             // console.log(data);
             setGenres([...data.genres]);
             setPoster(`https://image.tmdb.org/t/p/w500/${data.poster_path}`);
+        } catch (error) {
+            console.error(error);
+        }
+    }
+    async function getSimilar() {
+        try {
+            const response = await axios.get(similar);
+            const data = response.data;
+            setSimilarMovies(data.results);
+            // console.log(data);
         } catch (error) {
             console.error(error);
         }
@@ -135,6 +147,7 @@ function Details() {
     useEffect(() => {
         document.body.scrollIntoView({ behavior: "smooth" });
         getMovie();
+        getSimilar();
         getVotes();
 
         const token = localStorage.getItem("token");
@@ -148,6 +161,10 @@ function Details() {
         getCast();
         getImages();
     }, [details]);
+
+    // useEffect(() => {
+    //     console.log(similarMovies);
+    // }, [similarMovies]);
 
     useEffect(() => {
         votes.map((vote) => {
@@ -332,6 +349,25 @@ function Details() {
                                 />
                             </Link>
                             {person.name}
+                        </div>
+                    );
+                })}
+            </div>
+            <h2>You Might Also Like</h2>
+            <div className="person">
+                {similarMovies.map((similarMovie) => {
+                    return (
+                        <div className="person" key={similarMovie.id}>
+                            <a href={`/details/:${similarMovie.id}`}>
+                                <img
+                                    className="similar-img"
+                                    src={`https://image.tmdb.org/t/p/w500/${similarMovie.poster_path}`}
+                                    onError={(e) => {
+                                        e.target.src = image2;
+                                    }}
+                                />
+                            </a>
+                            {similarMovie.title}
                         </div>
                     );
                 })}

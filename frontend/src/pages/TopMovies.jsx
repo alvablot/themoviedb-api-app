@@ -47,10 +47,12 @@ function TopMovies() {
     async function getMovies(a, b) {
         try {
             const response = await axios.get(a + b + page + nextPage + end);
-            const data = response.data;
+            let data = response.data;
+
             setSearchResults(data.results);
             setTotalPages(data.total_pages);
             setCurrentPage(data.page);
+            // console.log(data);
         } catch (error) {}
     }
 
@@ -83,8 +85,6 @@ function TopMovies() {
     }
     function logOut() {
         localStorage.clear();
-        // setEmail("")
-        // setPassword("")
         setIsLoggedIn("");
         setHideShowLogin("visible");
         setHideShowLogout("hidden");
@@ -296,7 +296,7 @@ function TopMovies() {
                                 </div>
                                 {/*<br />
                                 {result.release_date || result.first_air_date
-}
+                                }
                                 <p>{result.overview}</p> */}
                             </div>
                         );

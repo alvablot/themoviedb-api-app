@@ -79,11 +79,15 @@
     gap: 1rem;
     align-items: baseline;
 }
+.similar-img {
+    width: 75%;
+    transition: 0.3s;
+}
 .person-img {
     width: 100%;
     transition: 0.3s;
 }
-.person-img:hover {
+.person-img:hover, .similar-img:hover {
     opacity: 0.8;
 }
 #cover {
