@@ -16,22 +16,7 @@ const api_key = "25ab3dddf0d6a4fa832949a56d7e7191";
 
 function Details() {
     const providerValue = useMoviesContext();
-    const {
-        details,
-        setDetails,
-        searchResults,
-        setSearchResults,
-        searchInput,
-        setSearchInput,
-        nextPage,
-        setNextPage,
-        objBg,
-        setObjBg,
-        cast,
-        setCast,
-        crew,
-        setCrew,
-    } = useMoviesContext();
+    const { details, setDetails, searchResults, setSearchResults, searchInput, setSearchInput, nextPage, setNextPage, objBg, setObjBg, cast, setCast, crew, setCrew } = useMoviesContext();
 
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -45,6 +30,7 @@ function Details() {
     const [similarMovies, setSimilarMovies] = useState([]);
 
     const [votes, setVotes] = useState([]);
+    const [roundVotes, setRoundVotes] = useState(0);
     const [star1, setStar1] = useState("");
     const [star2, setStar2] = useState("");
     const [star3, setStar3] = useState("");
@@ -108,12 +94,23 @@ function Details() {
             // console.log(data.crew)
         } catch (error) {}
     }
+
     async function getVotes() {
         try {
             const response = await axios.get("http://localhost:4000/votes/");
             const data = response.data;
             const filteredData = data.votes.filter((vote) => vote.id === details.id);
             setVotes([...filteredData]);
+
+            let totalVotes = 0;
+            const a = 0;
+            const b = filteredData.length;
+            const sum = filteredData.reduce((accumulator, object) => {
+                return accumulator + object.vote;
+            }, 0);
+
+            const roundVotes = sum / b;
+            setRoundVotes(roundVotes);
         } catch (error) {
             console.error(error);
         }
@@ -148,7 +145,6 @@ function Details() {
         document.body.scrollIntoView({ behavior: "smooth" });
         getMovie();
         getSimilar();
-        getVotes();
 
         const token = localStorage.getItem("token");
         const email = localStorage.getItem("email");
@@ -158,6 +154,7 @@ function Details() {
     }, []);
 
     useEffect(() => {
+        getVotes();
         getCast();
         getImages();
     }, [details]);
@@ -167,11 +164,7 @@ function Details() {
     // }, [similarMovies]);
 
     useEffect(() => {
-        votes.map((vote) => {
-            summonVotes += parseInt(vote.vote);
-        });
-        const roundVotes = summonVotes / votes.length || 0;
-        // console.log(roundVotes);
+
         if (roundVotes > 4.5) {
             setStar1(starFull);
             setStar2(starFull);
@@ -239,7 +232,7 @@ function Details() {
             setStar4(starEmpty);
             setStar5(starEmpty);
         }
-    }, [votes]);
+    }, [roundVotes]);
 
     return (
         <div className="details">
@@ -348,16 +341,18 @@ function Details() {
                                     }}
                                 />
                             </Link>
-                            {person.name}
+                            <div className="title-box">
+                                <b>{person.name}</b>
+                            </div>
                         </div>
                     );
                 })}
             </div>
-            <h2>You Might Also Like</h2>
+            <h2>You might also like</h2>
             <div className="person">
                 {similarMovies.map((similarMovie) => {
                     return (
-                        <div className="person" key={similarMovie.id}>
+                        <div className="person" key={`sim_${similarMovie.id}`}>
                             <a href={`/details/:${similarMovie.id}`}>
                                 <img
                                     className="similar-img"
@@ -367,7 +362,9 @@ function Details() {
                                     }}
                                 />
                             </a>
-                            {similarMovie.title}
+                            <div className="title-box">
+                                <b>{similarMovie.title}</b>
+                            </div>
                         </div>
                     );
                 })}

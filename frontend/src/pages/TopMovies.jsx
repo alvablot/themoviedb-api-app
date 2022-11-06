@@ -19,24 +19,7 @@ const end = "&language=en-US&sort_by=popularity.desc";
 
 function TopMovies() {
     const providerValue = useMoviesContext();
-    const {
-        details,
-        setDetails,
-        searchResults,
-        setSearchResults,
-        searchInput,
-        setSearchInput,
-        nextPage,
-        setNextPage,
-        currentPage,
-        setCurrentPage,
-        totalPages,
-        setTotalPages,
-        objBg,
-        setObjBg,
-        token,
-        setToken,
-    } = useMoviesContext();
+    const { details, setDetails, searchResults, setSearchResults, searchInput, setSearchInput, nextPage, setNextPage, currentPage, setCurrentPage, totalPages, setTotalPages, objBg, setObjBg, token, setToken } = useMoviesContext();
     const [email, setEmail] = useState("Email");
     const [password, setPassword] = useState("Password");
     const [isLoggedIn, setIsLoggedIn] = useState("");
@@ -79,7 +62,7 @@ function TopMovies() {
         } catch (error) {
             setIsLoggedIn(error.response.data);
             setTimeout(() => {
-                setIsLoggedIn();
+                setIsLoggedIn("");
             }, 2000);
         }
     }
@@ -103,6 +86,10 @@ function TopMovies() {
                 setHideShowNewUser("hidden");
                 setEmail("");
                 setPassword("");
+                setIsLoggedIn("New user created");
+                setTimeout(() => {
+                    setIsLoggedIn("");
+                }, 2000);
             }
         } catch (error) {
             setIsLoggedIn(error.response.data);
@@ -243,8 +230,7 @@ function TopMovies() {
                 </button>
                 <button
                     onClick={() => {
-                        trending =
-                            "https://api.themoviedb.org/3/movie/top_rated?api_key=" + api_key;
+                        trending = "https://api.themoviedb.org/3/movie/top_rated?api_key=" + api_key;
                         getMovies(trending, "");
                     }}
                 >
@@ -260,8 +246,7 @@ function TopMovies() {
                 </button>
                 <button
                     onClick={() => {
-                        trending =
-                            "https://api.themoviedb.org/3/movie/now_playing?api_key=" + api_key;
+                        trending = "https://api.themoviedb.org/3/movie/now_playing?api_key=" + api_key;
                         getMovies(trending, "");
                     }}
                 >

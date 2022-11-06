@@ -80,7 +80,7 @@
     align-items: baseline;
 }
 .similar-img {
-    width: 75%;
+    width: 100%;
     transition: 0.3s;
 }
 .person-img {
@@ -130,6 +130,11 @@
     align-items: center;
     text-align: center;
     z-index: 10;
+}
+.title-box {
+    margin-top: 0px;
+    position:relative;
+    top: -15px;
 }
 .person-img-container {
     text-align: center;
